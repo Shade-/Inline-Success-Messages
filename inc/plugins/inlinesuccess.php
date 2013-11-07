@@ -23,9 +23,9 @@ function inlinesuccess_info()
 	return array(
 		'name' => 'Inline Success Messages',
 		'description' => 'Adds support for inline success messages globally instead of an (un)friendly redirection page.',
-		'website' => 'http://www.idevicelab.net/forum',
+		'website' => '',
 		'author' => 'Shade',
-		'authorsite' => 'http://www.idevicelab.net/forum',
+		'authorsite' => '',
 		'version' => '1.0',
 		'compatibility' => '16*',
 		'guid' => 'f6f2925d440239e6f3a894703ba088c6'
