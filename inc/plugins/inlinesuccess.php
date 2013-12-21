@@ -181,7 +181,7 @@ function inlinesuccess_redirect(&$args)
 	);
 	
 	// the HTTP_REFERER should be trusted as the redirect() function is usually fired on POST requests in usercp (which is the main reason we are installing this plugin)
-	if (THIS_SCRIPT == 'usercp.php' || THIS_SCRIPT == 'private.php') {
+	if (THIS_SCRIPT == 'usercp.php') {
 		header("Location: {$_SERVER['HTTP_REFERER']}");
 	} else if (my_substr($url, 0, 7) !== 'http://' && my_substr($url, 0, 8) !== 'https://' && my_substr($url, 0, 1) !== '/') {
 		header("Location: {$mybb->settings['bburl']}/{$url}");
