@@ -1,7 +1,7 @@
 <?php
 
-// language replacements for usercp.lang.php and others
-
+// language replacements
+// usercp.lang.php
 $l['redirect_subscriptionsremoved'] = "Your thread subscriptions list has been cleared successfully.";
 $l['redirect_forumsubscriptionsremoved'] = "Your forum subscriptions list has been cleared successfully.";
 $l['redirect_subscriptionadded'] = "The selected thread has been added to your subscriptions list.";
@@ -17,3 +17,7 @@ $l['redirect_emailupdated'] = "Your email address has successfully been updated.
 $l['redirect_passwordupdated'] = "Thank you, your password has successfully been updated.";
 $l['redirect_changeemail_activation'] = "Your email address has successfully been updated. For your new email address to become active, we require that you complete a validation process.<p>Please check the new email address you specified for further instructions on how to complete the account activation process.</p>";
 $l['redirect_avatarupdated'] = "Your avatar has been changed successfully.";
+// private.lang.php
+$l['redirect_pmsent'] = "Your private message has successfully been sent.";
+$l['redirect_pmfoldersupdated'] = "Your private messaging folders have successfully been updated.";
+$l['redirect_pmfoldersemptied'] = "The selected private messaging folders have successfully been emptied.";

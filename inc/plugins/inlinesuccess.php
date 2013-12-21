@@ -90,9 +90,21 @@ function inlinesuccess_install()
 		)
 	));
 	
-	// add $success variable wherever a {$_error_} variable is found
+	// add $inlinesuccess variable to...
+	// all templates
 	find_replace_multitemplatesets('(\{\$([^->]*)error(.*)\})', '$0 {$inlinesuccess}');
 	
+	require_once MYBB_ROOT."/inc/adminfunctions_templates.php";
+	// private
+	$private = array('private', 'private_empty', 'private_folders', 'private_tracking');
+	foreach ($private as $title) {
+		find_replace_templatesets($title, '#(\{\\$usercpnav\}(?:\n|.)*\<td valign=\"top\"\>)#i', '$0 {$inlinesuccess}');		
+	}
+	// modcp
+	$modcp = array('modcp_finduser', 'modcp_announcements', 'modcp_reports', 'modcp_banning');
+	foreach ($modcp as $title) {
+		find_replace_templatesets($title, '#(\{\\$modcp_nav\}(?:\n|.)*\<td valign=\"top\"\>)#i', '$0 {$inlinesuccess}');		
+	}
 }
 
 function inlinesuccess_uninstall()
@@ -115,14 +127,18 @@ function inlinesuccess_uninstall()
 	$PL->templates_delete('inlinesuccess');
 	$PL->settings_delete('inlinesuccess');
 	
-	// remove $success variable	
+	// remove $inlinesuccess variable	
 	find_replace_multitemplatesets('\{\$inlinesuccess\}', '');
 }
 
 if ($mybb->settings['inlinesuccess_enabled']) {
 	$plugins->add_hook("redirect", "inlinesuccess_redirect");
 	$plugins->add_hook("global_start", "inlinesuccess_global_start");
-	$plugins->add_hook("usercp_start", "inlinesuccess_usercp_start");
+	$plugins->add_hook("usercp_start", "inlinesuccess_lang_load");
+	$plugins->add_hook("private_do_folders_end", "inlinesuccess_lang_load");
+	$plugins->add_hook("private_do_empty_end", "inlinesuccess_lang_load");
+	$plugins->add_hook("private_do_send_end", "inlinesuccess_lang_load");
+	$plugins->add_hook("private_do_tracking_end", "inlinesuccess_lang_load");
 }
 
 // Populate the session and redirects the user to the page he came from
@@ -165,7 +181,7 @@ function inlinesuccess_redirect(&$args)
 	);
 	
 	// the HTTP_REFERER should be trusted as the redirect() function is usually fired on POST requests in usercp (which is the main reason we are installing this plugin)
-	if (THIS_SCRIPT == 'usercp.php') {
+	if (THIS_SCRIPT == 'usercp.php' || THIS_SCRIPT == 'private.php') {
 		header("Location: {$_SERVER['HTTP_REFERER']}");
 	} else if (my_substr($url, 0, 7) !== 'http://' && my_substr($url, 0, 8) !== 'https://' && my_substr($url, 0, 1) !== '/') {
 		header("Location: {$mybb->settings['bburl']}/{$url}");
@@ -203,7 +219,7 @@ function inlinesuccess_global_start()
 }
 
 // Loads our lang variables into usercp, replacing the core ones
-function inlinesuccess_usercp_start()
+function inlinesuccess_lang_load()
 {
 	global $mybb;
 	
