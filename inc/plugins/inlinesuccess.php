@@ -81,7 +81,12 @@ function inlinesuccess_install()
 		'enabled' => array(
 			'title' => $lang->inlinesuccess_settings_enable,
 			'description' => $lang->inlinesuccess_settings_enable_desc,
-			'value' => '1'
+			'value' => 1
+		),
+		'force' => array(
+			'title' => $lang->inlinesuccess_settings_force,
+			'description' => $lang->inlinesuccess_settings_force_desc,
+			'value' => 0
 		)
 	));
 	
@@ -125,8 +130,7 @@ function inlinesuccess_redirect(&$args)
 {
 	global $mybb;
 	
-	// don't do anything if the user doesn't want it
-	if ($mybb->user['showredirect']) {
+	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force']) {
 		return;
 	}
 	
@@ -175,7 +179,13 @@ function inlinesuccess_redirect(&$args)
 // Populates the $success variable
 function inlinesuccess_global_start()
 {
-	global $mybb, $inlinesuccess, $templates, $templatelist;
+	global $mybb;
+	
+	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force']) {
+		return;
+	}
+	
+	global $inlinesuccess, $templates, $templatelist;
 	
 	if (!session_id()) {
 		session_start();
@@ -192,9 +202,15 @@ function inlinesuccess_global_start()
 	}
 }
 
-// Loads our lang variables into usercp
+// Loads our lang variables into usercp, replacing the core ones
 function inlinesuccess_usercp_start()
 {
+	global $mybb;
+	
+	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force']) {
+		return;
+	}
+	
 	global $lang;
 	
 	$lang->load("inlinesuccess");
