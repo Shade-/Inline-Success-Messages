@@ -25,7 +25,7 @@ function inlinesuccess_info()
 		'description' => 'Adds support for inline success messages globally instead of an (un)friendly redirection page.',
 		'website' => 'https://github.com/Shade-/Inline-Success-Messages',
 		'author' => 'Shade',
-		'version' => '1.0',
+		'version' => '1.0.1',
 		'compatibility' => '16*',
 		'guid' => 'f6f2925d440239e6f3a894703ba088c6'
 	);
@@ -146,7 +146,7 @@ function inlinesuccess_redirect(&$args)
 {
 	global $mybb;
 	
-	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force']) {
+	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force'] || $mybb->input['ajax']) {
 		return;
 	}
 	
@@ -180,10 +180,7 @@ function inlinesuccess_redirect(&$args)
 		'message' => $args['message']
 	);
 	
-	// the HTTP_REFERER should be trusted as the redirect() function is usually fired on POST requests in usercp (which is the main reason we are installing this plugin)
-	if (THIS_SCRIPT == 'usercp.php') {
-		header("Location: {$_SERVER['HTTP_REFERER']}");
-	} else if (my_substr($url, 0, 7) !== 'http://' && my_substr($url, 0, 8) !== 'https://' && my_substr($url, 0, 1) !== '/') {
+	if (my_substr($url, 0, 7) !== 'http://' && my_substr($url, 0, 8) !== 'https://' && my_substr($url, 0, 1) !== '/') {
 		header("Location: {$mybb->settings['bburl']}/{$url}");
 	} else {
 		header("Location: {$url}");
