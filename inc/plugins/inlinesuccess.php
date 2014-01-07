@@ -25,7 +25,7 @@ function inlinesuccess_info()
 		'description' => 'Adds support for inline success messages globally instead of an (un)friendly redirection page.',
 		'website' => 'https://github.com/Shade-/Inline-Success-Messages',
 		'author' => 'Shade',
-		'version' => '1.0.1',
+		'version' => '1.0.2',
 		'compatibility' => '16*',
 		'guid' => 'f6f2925d440239e6f3a894703ba088c6'
 	);
@@ -144,14 +144,18 @@ if ($mybb->settings['inlinesuccess_enabled']) {
 // Populate the session and redirects the user to the page he came from
 function inlinesuccess_redirect(&$args)
 {
-	global $mybb;
+	global $mybb, $lang;
 	
 	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force'] || $mybb->input['ajax']) {
 		return;
 	}
 	
 	if (!session_id()) {
+		
+		// Prevents weird warnings
+		ob_flush();
 		session_start();
+		
 	}
 	
 	if (!$args['message']) {
@@ -172,7 +176,7 @@ function inlinesuccess_redirect(&$args)
 		";"
 	), "", $url);
 	
-	// after running any shutdown functions...
+	// After running any shutdown functions...
 	run_shutdown();
 	
 	// ... append the message to the _SESSION and let another function do the rest
@@ -194,24 +198,29 @@ function inlinesuccess_global_start()
 {
 	global $mybb;
 	
-	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force']) {
+	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force'] || $mybb->input['ajax']) {
 		return;
 	}
 	
-	global $inlinesuccess, $templates, $templatelist;
+	global $inlinesuccess, $templates;
 	
 	if (!session_id()) {
+	
+		// Prevents weird warnings
+		ob_flush();
 		session_start();
+		
 	}
 	
-	$templatelist .= ',inlinesuccess_success';
-	
-	// hell yeah, we've got a message to show!
+	// Hell yeah, we've got a message to show!
 	if ($_SESSION['inlinesuccess']) {
+	
 		$messagelist = $_SESSION['inlinesuccess']['message'];
 		eval("\$inlinesuccess = \"" . $templates->get("inlinesuccess_success") . "\";");
-		// aaaand we're done here
+		
+		// Aaaand we're done here
 		unset($_SESSION['inlinesuccess']);
+		
 	}
 }
 
@@ -220,7 +229,7 @@ function inlinesuccess_lang_load()
 {
 	global $mybb;
 	
-	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force']) {
+	if($mybb->user['showredirect'] && !$mybb->settings['inlinesuccess_force'] || $mybb->input['ajax']) {
 		return;
 	}
 	
@@ -239,7 +248,8 @@ function find_replace_multitemplatesets($find, $replace)
 	// Select all templates
 	$query = $db->simple_select("templates", "tid, sid, template, title", "template REGEXP '" . preg_quote($find) . "'");
 	while ($template = $db->fetch_array($query)) {
-		// replace the content
+	
+		// Replace the content
 		$new_template = preg_replace("#" . $find . "#i", $replace, $template['template']);
 		if ($new_template == $template['template']) {
 			continue;
