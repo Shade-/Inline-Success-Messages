@@ -131,6 +131,8 @@ function inlinesuccess_uninstall()
 	find_replace_multitemplatesets('\{\$inlinesuccess\}', '');
 }
 
+global $mybb;
+
 if ($mybb->settings['inlinesuccess_enabled']) {
 	$plugins->add_hook("redirect", "inlinesuccess_redirect");
 	$plugins->add_hook("global_start", "inlinesuccess_global_start");
@@ -151,11 +153,7 @@ function inlinesuccess_redirect(&$args)
 	}
 	
 	if (!session_id()) {
-		
-		// Prevents weird warnings
-		ob_flush();
 		session_start();
-		
 	}
 	
 	if (!$args['message']) {
@@ -205,11 +203,7 @@ function inlinesuccess_global_start()
 	global $inlinesuccess, $templates;
 	
 	if (!session_id()) {
-	
-		// Prevents weird warnings
-		ob_flush();
 		session_start();
-		
 	}
 	
 	// Hell yeah, we've got a message to show!
