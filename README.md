@@ -1,9 +1,7 @@
 # Inline Success Messages
 
-**IMPORTANT**: *Thanks to this GitHub Repo you can track bugfixes and keep your Inline Success Messages copy up to date, but keep in mind that this is a <strong>development version</strong>. Therefore, you may encounter errors and relevant bugs using this version, although I will try to leave its code as functional as possible.*
-
-> **Current version** 1.0  
-> **Dependencies** PluginLibrary, a library which contains useful PHP functions for MyBB  
+> **Current version** 1.0.2  
+> **Dependencies** PluginLibrary   
 > **Author** Shade  
 
 ## General
@@ -20,7 +18,7 @@ If you want to integrate ISM into your plugin, just do as follows:
 
 ### 1. Add {$inlinesuccess} to your template
 
-Just add it. Place a ```{$inlinesuccess}``` variable wherever you want the message to appear.
+Just add it. Place an ```{$inlinesuccess}``` variable wherever you want the message to appear.
 
 ### 2. (optional) Globalize $inlinesuccess
 
