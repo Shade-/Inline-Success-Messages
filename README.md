@@ -1,33 +1,19 @@
 # Inline Success Messages
 
-> **Current version** 1.0.2  
-> **Dependencies** PluginLibrary   
+> **Current version** 2.0  
+> **Dependencies** PluginLibrary  
 > **Author** Shade  
 
 ## General
 
-Inline Success Messages (from now on: ISM) replaces MyBB's default behavior when you update your User CP settings, returning a success message instead of a (un)friendly redirection page. It's inspired by IPBoard's systems.
+Inline Success Messages (from now on: ISM) replaces MyBB's default behavior when you update your UserCP settings, returning a success message instead of a (un)friendly redirection page. It's inspired by IPBoard's systems.
 
-ISM works **only** with 1.6 MyBB installations and comes with additional CSS styles loaded directly into its template.
+ISM works with MyBB 1.8. It uses MyBB’s default message handler which is jGrowl. 1.6 users should manually load jQuery and jGrowl into ISM’s template.
 
 If you have any feature request, suggestion, or you want to report any issue, please let me know opening a new issue on GitHub. Your contribute is very important to me and helps me into making ISM more complete on every commit.
 
-## Integrating
+I no longer support the legacy version (1.x), which was specifically built for 1.6 and used awful hacks to edit 40+ templates at one time. To 1.6 users, I suggest either upgrading to 1.8 or to add jQuery and jGrowl.
 
-If you want to integrate ISM into your plugin, just do as follows:
+## Support
 
-### 1. Add {$inlinesuccess} to your template
-
-Just add it. Place an ```{$inlinesuccess}``` variable wherever you want the message to appear.
-
-### 2. (optional) Globalize $inlinesuccess
-
-If you have a stand-alone page and if you require the global.php file, then you're already done. Just redirect() as you would usually do. ISM will hijack the message you pass inside it, and will display it wherever you have put the $inlinesuccess variable.
-
-If you are hooking into, let's say, the User Control Panel and therefore you have a function, you need to globalize the $inlinesuccess variable. Put this snippet at the very top of your function:
-
-```php
-global $inlinesuccess
-```
-
-Or add ```$inlinesuccess``` to your list of global variables.
+Support for ISM is given exclusively on (http://www.mybboost.com)[MyBBoost].
