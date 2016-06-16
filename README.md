@@ -16,4 +16,4 @@ I no longer support the legacy version (1.x), which was specifically built for 1
 
 ## Support
 
-Support for ISM is given exclusively on (http://www.mybboost.com)[MyBBoost].
+Support for ISM is given exclusively on [MyBBoost](http://www.mybboost.com).
