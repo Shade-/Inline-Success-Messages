@@ -23,3 +23,7 @@ $l['redirect_avatarupdated'] = "Your avatar has been changed successfully.";
 $l['redirect_pmsent'] = "Your private message has successfully been sent.";
 $l['redirect_pmfoldersupdated'] = "Your private messaging folders have successfully been updated.";
 $l['redirect_pmfoldersemptied'] = "The selected private messaging folders have successfully been emptied.";
+
+// Login and logout
+$l['redirect_loggedin'] = "You have successfully been logged in.";
+$l['redirect_loggedout'] = 'You have successfully been logged out.';

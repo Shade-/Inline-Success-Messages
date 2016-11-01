@@ -7,7 +7,7 @@
  * @package Inline Success Messages
  * @author  Shade <legend_k@live.it>
  * @license http://www.gnu.org/licenses/ GNU/GPL license
- * @version 2.0
+ * @version 2.1
  */
 
 if (!defined('IN_MYBB')) {
@@ -25,7 +25,7 @@ function inlinesuccess_info()
 		'description' => 'Adds support for inline success messages globally instead of an (un)friendly redirection page.',
 		'website' => 'https://www.mybboost.com/forum-inline-success-messages',
 		'author' => 'Shade',
-		'version' => '2.0',
+		'version' => '2.1',
 		'compatibility' => '18*'
 	);
 }
@@ -112,18 +112,48 @@ $plugins->add_hook("redirect", "inlinesuccess_redirect");
 $plugins->add_hook("pre_output_page", "inlinesuccess_show_message");
 $plugins->add_hook("usercp_start", "inlinesuccess_overwrite_lang");
 $plugins->add_hook("private_start", "inlinesuccess_overwrite_lang");
+$plugins->add_hook("member_do_login_start", "inlinesuccess_overwrite_lang");
+$plugins->add_hook("member_logout_start", "inlinesuccess_overwrite_lang");
+
+if (defined('IN_ADMINCP')) {	
+	$plugins->add_hook("admin_load", "inlinesuccess_ad");
+}
+
+// Advertising
+function inlinesuccess_ad()
+{
+	global $cache, $mybb;
+	
+	$info = inlinesuccess_info();
+	$plugins = $cache->read('shade_plugins');
+	
+	if (!in_array($mybb->user['uid'], (array) $plugins[$info['name']]['ad_shown'])) {
+		
+		flash_message('Thank you for using ' . $info['name'] . '! You might also be interested in other great plugins on <a href="http://projectxmybb.altervista.org">MyBBoost</a>, where you can also get support for ' . $info['name'] . ' itself.<br /><small>This message will not be shown again to you.</small>', 'success');
+		
+		$plugins[$info['name']]['ad_shown'][] = $mybb->user['uid'];
+		$cache->update('shade_plugins', $plugins);
+		
+	}
+	
+}
 
 // Save message in the session
 function inlinesuccess_redirect(&$args)
 {
-	global $mybb;
+	global $mybb, $validated, $loginhandler;
 	
-	if (($mybb->user['showredirect'] and !$mybb->settings['inlinesuccess_force']) or $mybb->input['ajax']) {
+	if ((($mybb->user['showredirect'] or !$mybb->user['uid']) and !$mybb->settings['inlinesuccess_force'] and $loginhandler->captcha_verified != true) or $mybb->input['ajax']) {
 		return false;
 	}
 	
 	if ($mybb->settings['inlinesuccess_force']) {
 		$mybb->user['showredirect'] = 0; // Should bypass the redirection page
+	}
+	
+	// When logging in, the user uid is 0, so the bypass does not work. We need to temporarily assign a uid to it
+	if ($validated and $loginhandler->captcha_verified == true) {
+		$mybb->user['uid'] = random_str();
 	}
 	
 	if (!session_id()) {
